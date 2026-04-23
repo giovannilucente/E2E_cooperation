@@ -8,7 +8,7 @@ Repository forked from [CoLMDriver](https://github.com/cxliu0314/colmdriver).
 #### Step 1: Basic Installation for colmdriver
 Get code and create pytorch environment.
 ```Shell
-git clone https://github.com/cxliu0314/CoLMDriver.git
+git clone https://github.com/giovannilucente/E2E_cooperation.git
 conda create --name colmdriver python=3.7 cmake=3.22.1
 conda activate colmdriver
 conda install pytorch==1.10.1 torchvision==0.11.2 torchaudio==0.10.1 cudatoolkit=11.3 -c pytorch -c conda-forge
