@@ -80,6 +80,12 @@ class V2XVERSEBaseDataset(Dataset):
                                             else self.generate_object_center_camera
         self.generate_object_center_single = self.generate_object_center # will it follows 'self.generate_object_center' when 'self.generate_object_center' change?
 
+        # Initialize early to avoid AttributeError in all code paths
+        self.first_det = False
+        self.label_mode = self.params.get('label_mode', 'v2xverse')
+        self.route_frames = []
+        self.rsu_change_frame = 25
+
         if self.load_camera_file:
             self.data_aug_conf = params["fusion"]["args"]["data_aug_conf"]
 
