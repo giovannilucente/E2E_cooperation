@@ -1,12 +1,6 @@
-# CoLMDriver: LLM-based Negotiation Benefits Cooperative Autonomous Driving (ICCV2025)
+# Cooperative E2E models
+Repository forked from [CoLMDriver](https://github.com/cxliu0314/colmdriver).
 
-CoLMDriver is the first full-pipeline LLM-based cooperative driving system, enabling effective language-based negotiation and real-time driving control (accepted by ICCV 2025). 
-
-Additionally, we introduce InterDrive, a CARLA based simulation benchmark comprising 10 challenging interactive driving scenarios for evaluating V2V cooperation. 
-
-Check our [paper](https://arxiv.org/pdf/2503.08683) for more details.
-
-![framework](img/colmdriver_pipeline.png)
 
 ## Installation
 Two environments are needed: 'vllm' for MLLMs inference and 'colmdriver' for simulation.
@@ -14,7 +8,7 @@ Two environments are needed: 'vllm' for MLLMs inference and 'colmdriver' for sim
 ### vllm env
 Refer to official repo of [vllm](https://github.com/vllm-project/vllm.).
 
-### CoLMDriver env
+### Env
 #### Step 1: Basic Installation for colmdriver
 Get code and create pytorch environment.
 ```Shell
