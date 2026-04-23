@@ -18,15 +18,15 @@ conda activate colmdriver
 conda install pytorch==1.10.1 torchvision==0.11.2 torchaudio==0.10.1 cudatoolkit=11.3 -c pytorch -c conda-forge
 conda install cudnn -c conda-forge
 
-pip install -r opencood/requirements.txt
-pip install -r simulation/requirements.txt
+python -m pip install -r opencood/requirements.txt
+python -m pip install -r simulation/requirements.txt
 ```
 
 #### Step 2: Download and setup CARLA 0.9.10.1.
 ```Shell
 chmod +x simulation/setup_carla.sh
 ./simulation/setup_carla.sh
-easy_install carla/PythonAPI/carla/dist/carla-0.9.10-py3.7-linux-x86_64.egg
+python -m easy_install carla/PythonAPI/carla/dist/carla-0.9.10-py3.7-linux-x86_64.egg
 mkdir external_paths
 ln -s ${PWD}/carla/ external_paths/carla_root
 # If you already have a Carla, just create a soft link to external_paths/carla_root
@@ -52,10 +52,10 @@ Note: we choose the setuptools==41 to install because this version has the featu
 
 Steps 3,4,5 are for perception module.
 
-#### Step 3: Install Spconv (1.2.1)
-We use spconv 1.2.1 to generate voxel features in perception module.
-
-To install spconv 1.2.1, please follow the guide in https://github.com/traveller59/spconv/tree/v1.2.1.
+#### Step 3: Install Spconv 
+```Shell
+python -m pip install spconv-cu113
+```
 
 #### Step 4: Set up
 ```Shell
