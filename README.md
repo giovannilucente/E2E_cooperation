@@ -3,10 +3,6 @@ Repository forked from [CoLMDriver](https://github.com/cxliu0314/colmdriver).
 
 
 ## Installation
-Two environments are needed: 'vllm' for MLLMs inference and 'colmdriver' for simulation.
-
-### vllm env
-Refer to official repo of [vllm](https://github.com/vllm-project/vllm.).
 
 ### Env
 #### Step 1: Basic Installation for colmdriver
@@ -79,59 +75,6 @@ cd ..
 
 
 ## Evaluation on Interdrive benchmark
-
-### Evaluation of CoLMDriver
-
-**Step 1:** Download checkpoints from [Google drive](https://drive.google.com/file/d/1z3poGdoomhujCNQtoQ80-BCO34GTOLb-/view?usp=sharing). The downloaded checkpoints of CoLMDriver should follow this structure:
-```Shell
-|--CoLMDriver
-    |--ckpt
-        |--colmdriver
-            |--LLM
-            |--perception
-            |--VLM
-            |--waypoints_planner
-```
-
-**Step 2:** Running VLM, LLM
-```Shell
-conda activate vllm
-# VLM on call
-CUDA_VISIBLE_DEVICES=6 vllm serve ckpt/colmdriver/VLM --port 1111 --max-model-len 8192 --trust-remote-code --enable-prefix-caching
-
-# LLM on call
-CUDA_VISIBLE_DEVICES=7 vllm serve ckpt/colmdriver/LLM --port 8888 --max-model-len 4096 --trust-remote-code --enable-prefix-caching
-```
-Note: make sure that the selected ports (1111,8888) are not occupied by other services. If you use other ports, please modify values of key 'comm_client' and 'vlm_client' in `simulation/leaderboard/team_code/agent_config/colmdriver_config.yaml` accordingly.
-
-**Step 3:** Run CARLA, run CoLMDriver
-```Shell
-conda activate colmdriver
-
-# Start CARLA server, if port 2000 is already in use, choose another
-CUDA_VISIBLE_DEVICES=0 ./external_paths/carla_root/CarlaUE4.sh --world-port=2000 -prefer-nvidia
-
-# Open another terminal
-
-# Evaluate CoLMDriver on Interdrive(92 tests), 0 is CUDA id, 2000 is CARLA port (be consistent with your CARLA server)
-bash scripts/eval/eval_mode.sh 0 2000 colmdriver ideal Interdrive_all
-
-# Evaluate CoLMDriver on Interdrive, considering inference latency
-bash scripts/eval/eval_mode.sh 0 2000 colmdriver realtime Interdrive_all
-
-# Evaluate CoLMDriver on Interdrive(46 tests), in scenarios with no NPC, only collaborative vehicles
-bash scripts/eval/eval_mode.sh 0 2000 colmdriver ideal Interdrive_no_npc
-
-# Evaluate CoLMDriver on Interdrive(46 tests), in scenarios with NPC (other traffic participants)
-bash scripts/eval/eval_mode.sh 0 2000 colmdriver ideal Interdrive_npc
-```
-
-The results will be saved at `results/results_driving_colmdriver`, to summarize the results, use:
-```Shell
-python visualization/result_analysis.py results/results_driving_colmdriver
-```
-
-It's recommended to run LLM/VLM/CARLA_server/CoLMDriver_evaluation in 4 distinct terminals.
 
 ### Evaluation of baselines
 Setup and get ckpts.
@@ -233,49 +176,4 @@ bash scripts/train/train_planner_e2e.sh 0,1 2 ckpt/colmdriver/percpetion covlm_c
 
 # Offline test
 bash scripts/eval/eval_planner_e2e.sh 0,1 ckpt/colmdriver/percpetion covlm_cmd_extend_adaptive_20 ckpt/colmdriver/waypoints_planner/epoch_26.ckpt ./ckpt/colmdriver_planner
-```
-
-### VLM planner
-
-#### Data generation
-
-- Extract information from V2Xverse data (mentioned above): [MLLMs/data_transfer_sum.py](https://github.com/cxliu0314/CoLMDriver/blob/main/MLLMs/data_transfer_sum.py) 
-- Generate json format training data: [MLLMs/data_transfer_query.py](https://github.com/cxliu0314/CoLMDriver/blob/main/MLLMs/data_transfer_query.py)
-
-Our training data is also provided in [google drive](https://drive.google.com/file/d/1RH9iciUJ7fK5JpLSbYzCC_8Eb-hZnv9E/view?usp=sharing) for reference. Since the images are originated from local V2Xverse dataset, you still need to download the dataset to get full access.
-
-#### Lora Finetuning
-
-Using [ms-swift](https://github.com/modelscope/ms-swift) to finetune the MLLMs. Installation and details refer to the official repo. We provide an example script in [MLLMs/finetune.sh](https://github.com/cxliu0314/CoLMDriver/blob/main/MLLMs/finetune.sh)
-
-
-## Acknowledgements
-This implementation is based on code from several repositories.
-- [V2Xverse](https://github.com/CollaborativePerception/V2Xverse)
-- [Bench2Drive](https://github.com/Thinklab-SJTU/Bench2Drive)
-
-
-## Todo
-- [x] Checkpoints release of CoLMDriver
-- [x] Training of CoLMDriver
-  - [x] perception
-  - [x] planning
-  - [x] MLLM
-- [ ] Interdrive evaluation
-  - [x] CoLMDriver
-  - [x] CoDriving
-  - [x] TCP
-  - [ ] LMDrive
-  - [ ] UniAD
-  - [ ] VAD
-
-
-## Citation
-```
-@article{liu2025colmdriver,
-  title={CoLMDriver: LLM-based Negotiation Benefits Cooperative Autonomous Driving},
-  author={Liu, Changxing and Liu, Genjia and Wang, Zijun and Yang, Jinchang and Chen, Siheng},
-  journal={arXiv preprint arXiv:2503.08683},
-  year={2025}
-}
 ```
