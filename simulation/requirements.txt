@@ -9,3 +9,4 @@ scikit-image
 pygame
 dictor
 setuptools==41.2.0
+pytorch_lightning
