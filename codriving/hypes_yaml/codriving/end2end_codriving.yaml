@@ -53,7 +53,7 @@ data:
       output_points: *OUTPUT_POINTS
       det_range: *DET_RANGE
       dataset_mode: 'test'
-      dataset_index_list: 'dataset_index_planning_3.txt'
+      dataset_index_list: 'dataset_index_test.txt'
     distributed_sampler:
       type: "DistributedSampler"
       shuffle: False

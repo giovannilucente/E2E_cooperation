@@ -162,13 +162,20 @@ def visualize_output(index, model_output, batch_data, save_dir):
 def main():
     opt = test_parser()
     log_file_name = opt.log_filename.split('.')[0]+'_'+opt.planner_resume.split('.')[0].split('_')[-1]+'.txt'
-    initialize_root_logger(path=f'{opt.out_dir}/{log_file_name}')
+    log_path = f'{opt.out_dir}/{log_file_name}'
+    os.makedirs(os.path.dirname(log_path), exist_ok=True)
+    initialize_root_logger(path=log_path)
     logging.info(f'Using perception checkpoint: {opt.model_dir}')
 
     assert opt.fusion_method in ['late', 'early', 'intermediate', 'no', 'no_w_uncertainty', 'single'] 
 
     hypes = yaml_utils.load_yaml(None, opt)
     hypes['validate_dir'] = hypes['test_dir']
+    
+    # Override data paths to use external_paths/data_root
+    hypes['root_dir'] = 'external_paths/data_root'
+    hypes['validate_dir'] = 'external_paths/data_root'
+    hypes['test_dir'] = 'external_paths/data_root'
     
     print('Creating Model')
     perception_model = train_utils.create_model(hypes)
