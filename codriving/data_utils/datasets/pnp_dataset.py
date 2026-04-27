@@ -72,7 +72,7 @@ class CarlaMVDatasetEnd2End(BaseIODataset):
             output_points: TODO (weibo)
             det_range: TODO (weibo)
         """
-        super().__init__()
+        super().__init__(root=root)
         
         self.input_frame = input_frame # number of input frames
         self.output_points = output_points # number of output points
@@ -96,16 +96,16 @@ class CarlaMVDatasetEnd2End(BaseIODataset):
 
         filter_file = None
         if filte_danger:
-            if os.path.exists(os.path.join(self.root,'danger_frames.json')):
-                filter_file = self._load_json(os.path.join(root, 'danger_frames.json'))
+            if os.path.exists(os.path.join(self.root_path,'danger_frames.json')):
+                filter_file = self._load_json('danger_frames.json')
 
-        dataset_indexs = self._load_text(os.path.join(root, dataset_index_list)).split('\n')
+        dataset_indexs = self._load_text(dataset_index_list).split('\n')
         pattern = re.compile('weather-(\d+).*town(\d\d)')
         for line in dataset_indexs:
             if len(line.split()) != 3:
                 continue
             path, frames, egos = line.split()
-            route_path = os.path.join(root, path)
+            route_path = os.path.join(self.root_path, path)
             frames = int(frames)
             res = pattern.findall(path)
             if len(res) != 1:
@@ -129,7 +129,7 @@ class CarlaMVDatasetEnd2End(BaseIODataset):
             self.rsu_change_frame = max(file_len_list) + 1
 
             for j, file in enumerate(ego_files):
-                ego_path = os.path.join(route_path, file)
+                ego_path = os.path.join(path, file)
 
                 others_list = ego_files[:j]+ego_files[j+1:]
                 others_path_list = []

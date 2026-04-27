@@ -21,7 +21,7 @@ def load_checkpoint(
     Reference: https://pytorch.org/tutorials/beginner/saving_loading_models.html#saving-loading-a-general-checkpoint-for-inference-and-or-resuming-training
 
     Args:
-        checkpoint_path: path to checkpoint for resuming
+        checkpoint_path: path to checkpoint file or directory containing checkpoint
         device: device which all elements (model, optimizer, etc.) will be mapped to
         model: torch model whose state to be restored from checkpoint
             NOTE: need to be a CPU-based standalone model (e.g. not wrapped by DDP)
@@ -31,6 +31,17 @@ def load_checkpoint(
     Return:
         epoch index
     """
+    # If checkpoint_path is a directory, find the checkpoint file
+    if os.path.isdir(checkpoint_path):
+        # Look for checkpoint files
+        ckpt_files = [f for f in os.listdir(checkpoint_path) if f.endswith('.ckpt') or f.endswith('.pth')]
+        if not ckpt_files:
+            raise FileNotFoundError(f"No checkpoint files (.ckpt or .pth) found in {checkpoint_path}")
+        # Use the latest or best checkpoint (sort to get last one)
+        ckpt_files.sort()
+        checkpoint_path = os.path.join(checkpoint_path, ckpt_files[-1])
+        logging.info(f"Found checkpoint: {checkpoint_path}")
+    
     checkpoint = torch.load(checkpoint_path, map_location=device)
     torch.nn.modules.utils.consume_prefix_in_state_dict_if_present(checkpoint['model_state_dict'], 'module.')
     if strict:
