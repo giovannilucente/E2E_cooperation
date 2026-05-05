@@ -273,3 +273,5 @@ checkpoints/
 ckpt/
 ckpt
 simulation/assets/LMDrive
+
+.git_broken_backup/
