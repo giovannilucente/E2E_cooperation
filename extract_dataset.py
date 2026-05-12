@@ -1,16 +1,4 @@
 #!/usr/bin/env python3
-"""
-Dataset Extractor Utility
-
-This script extracts .zip files from a source folder to a destination folder.
-Useful for setting up datasets from compressed archives on remote servers.
-
-Usage:
-    python extract_dataset.py --source /path/to/source --dest /path/to/destination
-    
-    Or with defaults:
-    python extract_dataset.py  (extracts from ./data to ./data_extracted)
-"""
 
 import os
 import sys
@@ -71,7 +59,10 @@ def extract_zip_files(source_dir, dest_dir, verbose=True):
                 print(f"📦 Extracting: {zip_file.name}")
             
             with zipfile.ZipFile(zip_file, 'r') as zip_ref:
-                zip_ref.extractall(dest_path)
+                members = zip_ref.infolist()
+
+                for member in tqdm(members, desc=f"Extracting {zip_file.name}", unit="file"):
+                    zip_ref.extract(member, dest_path)
             
             if verbose:
                 print(f"✅ Successfully extracted: {zip_file.name}")
@@ -115,13 +106,13 @@ Examples:
     parser.add_argument(
         '--source',
         type=str,
-        default='./data',
+        default='../../../../../mnt/nfs-share/AI_Datasets/V2Xverse',
         help='Source directory containing .zip files (default: ./data)'
     )
     parser.add_argument(
         '--dest',
         type=str,
-        default='./data_extracted',
+        default='../../../../../mnt/nfs-share/AI_Datasets/_unzipped/V2Xverse',
         help='Destination directory for extracted files (default: ./data_extracted)'
     )
     parser.add_argument(
