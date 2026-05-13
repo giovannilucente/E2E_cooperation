@@ -186,7 +186,10 @@ class V2XVERSEBaseDataset(Dataset):
                     if i%self.rsu_change_frame != 0  and len(rsu_files)>0:
                         order = int(i/self.rsu_change_frame)+1 #  int(i/10)+1 
                         rsu_path = 'rsu_{}00{}'.format(order, ego_path[-1])
-                        if True: # os.path.exists(os.path.join(route_path, rsu_path,'measurements','{}.json'.format(str(i).zfill(4)))):
+                        # Only add RSU if it exists and has measurements
+                        rsu_full_path = os.path.join(route_path, rsu_path)
+                        rsu_measurements_file = os.path.join(rsu_full_path, 'measurements', '{}.json'.format(str(i).zfill(4)))
+                        if os.path.exists(rsu_full_path) and os.path.exists(rsu_measurements_file):
                             scene_dict['rsu'].append(os.path.join(path, rsu_path))
 
                     self.route_frames.append((scene_dict, i)) # (scene_dict, i)
